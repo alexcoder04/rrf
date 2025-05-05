@@ -41,7 +41,7 @@ class Room:
 
         self.loaded = True
 
-    def free_until(self, day: int, time: Time) -> Time:
+    def minutes_left(self, day: int, time: Time) -> Time:
         if self.occupied(day, time):
             return None
 

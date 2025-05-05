@@ -16,15 +16,8 @@ from telegram.ext import (
 )
 
 
-WEEKDAYS = {
-    "Mon": 0,
-    "Tue": 1,
-    "Wed": 2,
-    "Thu": 3,
-    "Fri": 4,
-    "Sat": 5,
-    "Sun": 6
-}
+WEEKDAYS = { "Mon": 0, "Tue": 1, "Wed": 2, "Thu": 3, "Fri": 4, "Sat": 5, "Sun": 6 }
+
 
 def build_response(rooms: list, checked: int, dur: float) -> str:
     roomslist = "\n".join([f"{r[0].html_disp()} free for {r[1]} more minutes." for r in rooms])
@@ -61,7 +54,7 @@ async def freeat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if rooms is None or len(rooms) == 0:
         await update.message.reply_text(message_templates.FREEAT_NO.format(number=checked, dur=dur))
         return
-    await update.message.reply_text(build_response(rooms, checked, dur), parse_mode="HTML")
+    await update.message.reply_text(build_response(sorted(rooms, key=lambda r: r[1]), checked, dur), parse_mode="HTML")
 
 
 async def free(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -81,14 +74,5 @@ async def free(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if rooms is None or len(rooms) == 0:
         await update.message.reply_text(message_templates.FREE_NO.format(number=checked, dur=dur))
         return
-    await update.message.reply_text(build_response(rooms, checked, dur), parse_mode="HTML")
-
-async def where(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    log.call("where", update.effective_user.id)
-
-    if not context.args:
-        await update.message.reply_text(message_templates.WHERE_ERROR)
-        return
-
-    await update.message.reply_text(message_templates.WHERE_ANS.format(building=context.args[0]))
+    await update.message.reply_text(build_response(sorted(rooms, key=lambda r: r[1]), checked, dur), parse_mode="HTML")
 

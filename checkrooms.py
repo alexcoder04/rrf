@@ -15,7 +15,7 @@ def checkrooms(day: int, time: Time):
             print(f"room {rid} could not be loaded")
             continue
 
-        free = r.free_until(day, time)
+        free = r.minutes_left(day, time)
         if free is not None:
             rooms.append((r, free))
 

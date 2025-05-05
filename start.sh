@@ -1,5 +1,5 @@
 #!/bin/sh
 
 . ./venv/bin/activate
-exec python3 main.py
+python3 main.py >>./applog 2>&1
 

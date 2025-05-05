@@ -12,9 +12,9 @@ For Example, `/freeat Tue 12:00`"""
 FREEAT_INVALIDDAY = "⛔ The entered weekday '{day}' is invalid. Enter one of these: Mon/Tue/Wed/Thu/Fri/Sat/Sun."
 FREEAT_START = """I'm starting to check free rooms on {day} at {hour:02d}:{minute:02d}.
 Please be patient as this may take a while. ⏳"""
-FREEAT_NO = """☑️ Checked {number} rooms in {dur:.2f} seconds.
+FREEAT_NO = """☑️ Checked {number} rooms in {dur:.3f} seconds.
 Unfortunately, I was not able to find any rooms available at that time. 😞"""
-FREEAT_RESP = """☑️ Checked {number} rooms in {dur:.2f} seconds.
+FREEAT_RESP = """☑️ Checked {number} rooms in {dur:.3f} seconds.
 🎓 Here is what I can offer you:
 
 """
@@ -29,7 +29,11 @@ For Example, `/where 1385`"""
 WHERE_ANS = """🏫 You can find {building} over here:
 https://maps.rwth-aachen.de/navigator/?type=roadmap&obj={building}"""
 
-
 SHUTDOWN_DENIED = "You are not allowed to use this command, you nasty bastard 😡"
 SHUTDOWN_SUCCESS = "Shutting down... 😴"
+
+SYSTEM_DENIED = "You are not allowed to use this command, you nasty bastard 😡"
+SYSTEM_INFO = """Daemon started: {start}
+User id: {user}
+Running on: {host}"""
 
