@@ -27,7 +27,7 @@ WEEKDAYS = {
 }
 
 def build_response(rooms: list, checked: int, dur: float) -> str:
-    roomslist = "\n".join([f"<a href='{r[0].rb_url()}'>{r[0].short_disp()}</a> free for {r[1]} more minutes." for r in rooms])
+    roomslist = "\n".join([f"{r[0].html_disp()} free for {r[1]} more minutes." for r in rooms])
     return message_templates.FREEAT_RESP.format(number=checked, dur=dur) + roomslist
 
 
@@ -73,7 +73,7 @@ async def free(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
 
     await update.message.reply_text(message_templates.FREE_START.format(
-            day=now.weekday(),
+            day=now.strftime("%a"),
             hour=now.hour,
             minute=now.minute
         ))
@@ -81,7 +81,7 @@ async def free(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if rooms is None or len(rooms) == 0:
         await update.message.reply_text(message_templates.FREE_NO.format(number=checked, dur=dur))
         return
-    await update.message.reply_text(rooms, checked, dur)
+    await update.message.reply_text(build_response(rooms, checked, dur), parse_mode="HTML")
 
 async def where(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     log.call("where", update.effective_user.id)
