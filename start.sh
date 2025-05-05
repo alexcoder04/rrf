@@ -1,5 +1,5 @@
 #!/bin/sh
 
-source ./venv/bin/activate
+. ./venv/bin/activate
 exec python3 main.py
 
