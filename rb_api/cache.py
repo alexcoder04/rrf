@@ -3,8 +3,8 @@ from time import sleep
 from .room import Room
 
 
-REQUEST_DELAY = 0.5
-CACHE_LIFETIME = 12 # hours
+REQUEST_DELAY = 1 # seconds
+CACHE_LIFETIME = 24 # hours
 
 
 cache = {}

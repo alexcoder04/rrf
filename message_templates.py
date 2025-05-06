@@ -3,8 +3,7 @@ START = """Hello there 👋!
 I'm a bot that helps you find free rooms at the RWTH.
 
 /free to find rooms that are free at the moment
-/freeat to find rooms that are free at a certain time
-/where to locate a building by its number"""
+/freeat to find rooms that are free at a certain time"""
 
 FREEAT_WEEKEND = "⚠️ Please note that due to technical reasons I am using this week's timetable, not next week's."
 FREEAT_ERROR = """⛔ Please pass the time you want to check as an argument. 
