@@ -1,0 +1,13 @@
+[Unit]
+Description=rrf tg bot
+
+[Service]
+User=alex
+Group=alex
+WorkingDirectory=/home/alex/rrf
+ExecStart=/home/alex/rrf/start.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
