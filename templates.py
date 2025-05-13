@@ -1,4 +1,6 @@
 
+error = "Sorry, an error occured while executing command `/{command}`. 🤯"
+
 class shutdown:
     denied = "You are not allowed to use this command, you nasty bastard 😡"
     progress = "Shutting down... 😴"

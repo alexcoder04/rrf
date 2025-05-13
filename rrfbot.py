@@ -1,14 +1,18 @@
 
+# local imports {{{
 from logger import Logger
 from rb_api import Time, Room
 import templates
+# }}}
 
+# library imports {{{
 from datetime import datetime, timedelta
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from time import monotonic, sleep
 import asyncio
 import os
+# }}}
 
 
 class RRFBot:
@@ -40,9 +44,8 @@ class RRFBot:
         self.app.add_handler(CommandHandler("shutdown", self.c_shutdown))
         self.app.add_handler(CommandHandler("system", self.c_system))
 
-        # TODO message only
         await self.app.updater.start_polling(
-            allowed_updates=Update.ALL_TYPES,
+            allowed_updates=Update.MESSAGE,
             drop_pending_updates=True
         )
         self.log.info("Application started successfully, waiting for commands...")
@@ -70,35 +73,43 @@ class RRFBot:
 
     # handler: system {{{
     async def c_system(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        self.log.call("system", update.effective_user.id)
-        if not self.is_root(update.effective_user.id):
-            await update.message.reply_text(templates.system.denied)
-            return
+        try:
+            self.log.call("system", update.effective_user.id)
+            if not self.is_root(update.effective_user.id):
+                await update.message.reply_text(templates.system.denied)
+                return
 
-        await update.message.reply_text(templates.system.info.format(
-            started=self.started.strftime("%Y-%m-%d_%H:%M:%S"),
-            user=update.effective_user.id,
-            host=self.hostname,
-            log="".join(self.log.tail(10))
-        ))
+            await update.message.reply_text(templates.system.info.format(
+                started=self.started.strftime("%Y-%m-%d_%H:%M:%S"),
+                user=update.effective_user.id,
+                host=self.hostname,
+                log="".join(self.log.tail(10))
+            ))
+        except Exception as e:
+            self.log.error(e)
+            await update.message.reply_text(templates.error.format(command="system"))
     # }}}
 
     # handler: start {{{
     async def c_start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        log.call("start", update.effective_user.id)
+        self.log.call("start", update.effective_user.id)
         await update.message.reply_text(templates.start.greeting)
     # }}}
 
     # handler: free {{{
     async def c_free(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        self.log.call("free", update.effective_user.id)
-        now = datetime.now()
+        try:
+            self.log.call("free", update.effective_user.id)
+            now = datetime.now()
 
-        if now.weekday() in (5, 6):
-            await update.message.reply_text(templates.free.weekend)
-            return
+            if now.weekday() in (5, 6):
+                await update.message.reply_text(templates.free.weekend)
+                return
 
-        await self.display_free(update, context, now.weekday(), Time(now.hour, now.minute))
+            await self.display_free(update, context, now.weekday(), Time(now.hour, now.minute))
+        except Exception as e:
+            self.log.error(e)
+            await update.message.reply_text(templates.error.format(command="free"))
     # }}}
 
     # handler: freeat {{{
@@ -106,7 +117,7 @@ class RRFBot:
         self.log.call("freeat", update.effective_user.id)
 
         if not context.args or len(context.args) < 2:
-            await update.message.reply_text(templates.freeat.invalid)
+            await update.message.reply_text(templates.freeat.missing_args)
             return
 
         try:
@@ -117,10 +128,14 @@ class RRFBot:
             await update.message.reply_text(templates.freeat.invalid_args)
             return
 
-        if datetime.now().weekday() > day:
-            await update.message.reply_text(templates.freeat.passed_day)
+        try:
+            if datetime.now().weekday() > day:
+                await update.message.reply_text(templates.freeat.passed_day)
 
-        await self.display_free(update, context, day, Time(hour, minute))
+            await self.display_free(update, context, day, Time(hour, minute))
+        except Exception as e:
+            self.log.error(e)
+            await update.message.reply_text(templates.error.format(command="freeat"))
     # }}}
 
     # disp free general {{{

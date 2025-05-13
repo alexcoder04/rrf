@@ -27,5 +27,5 @@ class Logger:
 
     def tail(self, lines: int = 5) -> list:
         with open(self.logfile, "r") as f:
-            return f.readlines()[:lines]
+            return f.readlines()[-lines:]
 
